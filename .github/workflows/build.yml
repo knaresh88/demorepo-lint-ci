@@ -33,7 +33,8 @@ jobs:
 
       - name: Build and analyze
         working-directory: ./employee-harness
-        run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
+        run: |
+          mvn clean install -DskipTests=true
+          mvn org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
               -Dsonar.projectKey=employee-harness \
-              -Dsonar.projectName='employee-harness' \
-              -DskipTests=true
+              -Dsonar.projectName='employee-harness'
