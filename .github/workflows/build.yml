@@ -33,6 +33,6 @@ jobs:
 
       - name: Build and analyze
         run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
-              -Dsonar.projectKey=Employee-harness \
-              -Dsonar.projectName='Employee-harness'
-        working-directory: ./employee-harness/pom.xml
+              -Dsonar.projectKey=employee-harness \
+              -Dsonar.projectName='employee-harness'
+        working-directory: employee-harness/pom.xml
