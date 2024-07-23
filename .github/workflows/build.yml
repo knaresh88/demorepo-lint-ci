@@ -39,7 +39,7 @@ jobs:
         run: |
           mvn clean install -DskipTests=true
           mvn org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
-              -Dsonar.projectKey=employee-harness \
-              -Dsonar.projectName='employee-harness' \
+              -Dsonar.projectKey=Employee-harness \
+              -Dsonar.projectName='Employee-harness' \
               -Dsonar.host.url=$SONAR_HOST_URL \
               -Dsonar.login=$SONAR_TOKEN
