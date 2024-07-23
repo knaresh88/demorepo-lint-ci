@@ -47,4 +47,3 @@ jobs:
             -Dsonar.projectName='Employee-harness' \
             -Dsonar.host.url=${{ secrets.SONAR_HOST_URL }} \
             -Dsonar.login=${{ secrets.SONAR_TOKEN }}
-
