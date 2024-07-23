@@ -32,7 +32,7 @@ jobs:
           key: ${{ runner.os }}-maven
 
       - name: Print environment variables for debug
-        run: echo "SONAR_HOST_URL: $SONAR_HOST_URL"
+        run: echo "SONAR_HOST_URL:$SONAR_HOST_URL"
         env:
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
 
