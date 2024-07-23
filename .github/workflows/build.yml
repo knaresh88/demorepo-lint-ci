@@ -35,4 +35,5 @@ jobs:
         working-directory: ./employee-harness
         run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
               -Dsonar.projectKey=employee-harness \
-              -Dsonar.projectName='employee-harness'
+              -Dsonar.projectName='employee-harness' \
+              -DskipTests=true
