@@ -6,7 +6,6 @@ import org.springframework.stereotype.Component;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.trinet.harness.service.FeatureFlagsService;
 
-import io.harness.cf.client.api.CfClient;
 import io.harness.cf.client.dto.Target;
  
 @Component
@@ -16,8 +15,8 @@ public class HarnessProvider {
 	@Autowired
 	FeatureFlagsService featureFlagsService;
 	
-	@Autowired
-	CfClient cfClient;
+	// @Autowired
+	// CfClient cfClient;
  
     public boolean getFlagValues(String flagName) {
         final Target target = Target.builder()
@@ -26,7 +25,8 @@ public class HarnessProvider {
 		    .attribute(FeatureFlagConstants.LOCATION, FeatureFlagConstants.LOCATION_VALUE)
 		    .build();
         
-		return cfClient.boolVariation(flagName, null, false);
+		// return cfClient.boolVariation(flagName, null, false);
+		return false;
     }
     
     public boolean getFlagValuesFromCache(String flagName) {
