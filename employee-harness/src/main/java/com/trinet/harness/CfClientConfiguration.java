@@ -1,36 +1,5 @@
 package com.trinet.harness;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import com.trinet.harness.domain.FFRedisDto;
-import com.trinet.harness.domain.FeatureFlagDto;
-import com.trinet.harness.repo.CacheDataRepo;
-import com.trinet.harness.service.GitHubActionsService;
-
-import lombok.SneakyThrows;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-
-import com.trinet.harness.utils.FeatureFlagConstants;
-import com.trinet.harness.utils.HarnessUtils;
-
-import io.harness.cf.client.api.BaseConfig;
-import io.harness.cf.client.api.CfClient;
-import io.harness.cf.client.api.Event;
-import io.harness.cf.client.api.FeatureFlagInitializeException;
-import io.harness.cf.client.connector.HarnessConfig;
-import io.harness.cf.client.connector.HarnessConnector;
-
 import java.io.IOException;
 import java.net.URI;
 import java.net.URLEncoder;
@@ -41,8 +10,27 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.trinet.harness.domain.FFRedisDto;
+import com.trinet.harness.domain.FeatureFlagDto;
+import com.trinet.harness.repo.CacheDataRepo;
+import com.trinet.harness.service.GitHubActionsService;
+import com.trinet.harness.utils.FeatureFlagConstants;
 
 @Configuration
 public class CfClientConfiguration {
@@ -54,38 +42,38 @@ public class CfClientConfiguration {
 
 	private final ObjectMapper objectMapper;
 	private String apiKey = FeatureFlagConstants.API_KEY;
-	CfClient cfClient;
+	// CfClient cfClient;
 
 	public CfClientConfiguration(CacheDataRepo cacheDataRepository, ObjectMapper objectMapper) {
 		this.cacheDataRepository = cacheDataRepository;
 		this.objectMapper = objectMapper;
 	}
 
-	@SneakyThrows
-	@Bean
-	CfClient cfClient() throws FeatureFlagInitializeException, InterruptedException, JsonProcessingException {
+	// @SneakyThrows
+	// @Bean
+	// CfClient cfClient() throws FeatureFlagInitializeException, InterruptedException, JsonProcessingException {
 
-		HarnessConfig connectorConfig = HarnessConfig.builder().configUrl("https://config.ff.harness.io/api/1.0")
-				.eventUrl("https://events.ff.harness.io/api/1.0").build();
+	// 	HarnessConfig connectorConfig = HarnessConfig.builder().configUrl("https://config.ff.harness.io/api/1.0")
+	// 			.eventUrl("https://events.ff.harness.io/api/1.0").build();
 
-		BaseConfig options = BaseConfig.builder().pollIntervalInSeconds(60).streamEnabled(true).analyticsEnabled(true)
-				.build();
+	// 	BaseConfig options = BaseConfig.builder().pollIntervalInSeconds(60).streamEnabled(true).analyticsEnabled(true)
+	// 			.build();
 
-		// Create the client
-		cfClient = new CfClient(new HarnessConnector(apiKey, connectorConfig), options);
-		// CfClient cfClient = new CfClient(apiKey);
-		cfClient.waitForInitialization();
+	// 	// Create the client
+	// 	cfClient = new CfClient(new HarnessConnector(apiKey, connectorConfig), options);
+	// 	// CfClient cfClient = new CfClient(apiKey);
+	// 	cfClient.waitForInitialization();
 
-		cfClient.on(Event.READY, result -> logger.info("Harness client initialized."));
-		cfClient.on(Event.CHANGED, this::getSSEvents);
-		// Cache Data
-		Optional<FeatureFlagDto> optionalCacheData = cacheDataRepository.findById("allFlags");
-		if (optionalCacheData.isEmpty()) {
-			logger.info("===== updating redis from app start");
-			this.getFFValues();
-		}
-		return cfClient;
-	}
+	// 	cfClient.on(Event.READY, result -> logger.info("Harness client initialized."));
+	// 	cfClient.on(Event.CHANGED, this::getSSEvents);
+	// 	// Cache Data
+	// 	Optional<FeatureFlagDto> optionalCacheData = cacheDataRepository.findById("allFlags");
+	// 	if (optionalCacheData.isEmpty()) {
+	// 		logger.info("===== updating redis from app start");
+	// 		this.getFFValues();
+	// 	}
+	// 	return cfClient;
+	// }
 
 	@Bean
 	public WebMvcConfigurer corsConfigurer() {
