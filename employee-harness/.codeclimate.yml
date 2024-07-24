@@ -1,0 +1,25 @@
+version: "2"
+engines:
+  checkstyle:
+    enabled: true
+    config:
+      checkstyle_checks: "/google_checks.xml"
+  spotbugs:
+    enabled: true
+ratings:
+  paths:
+  - "**.java"
+exclude_paths:
+- test/
+- "**/generated/**"
+- "**/lib/**"
+plugins:
+  duplication:
+    enabled: true
+    config:
+      languages:
+        java:
+          # Adjust threshold for minimum tokens to consider a block duplicated
+          threshold: 100
+test_reporter:
+  id: your_test_reporter_id
