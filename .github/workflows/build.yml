@@ -39,14 +39,27 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=knaresh88_demorepo-lint-ci
 
-      # Fetch SonarCloud Quality Gate status using API (replace with actual API endpoint and authentication)
-      - name: Fetch Quality Gate Status
+      - name: Install jq
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+        run: |
+          npm install -g jq
+
+      - name: Fetch SonarCloud Quality Gate status using API (replace with actual API endpoint and authentication)
         run: |
           curl -X GET https://sonarcloud.io/api/qualitygates/project_status?projectKey=knaresh88_demorepo-lint-ci \
             -H "Authorization: Bearer ${{ secrets.SONAR_TOKEN }}" \
             -s > quality_gate_status.json
-          # Parse the JSON response to extract the status
 
-      # Display the Quality Gate status
-      - name: Display Quality Gate Status
-        run: echo "The SonarCloud Quality Gate status is:$(cat quality_gate_status.json)"
+      - name: Parse JSON and extract coverage
+        run: |
+          coverage=$(jq '.projectStatus.conditions[0].actualValue' quality_gate_status.json)
+          echo "Coverage: $coverage"
+
+      - name: Check coverage
+        run: |
+          if (( $(echo "$coverage < 75" | bc) )); then
+            echo "Coverage is less than 75%, failing build"
+            exit 1
+          fi
